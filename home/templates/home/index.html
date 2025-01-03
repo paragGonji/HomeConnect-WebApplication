@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block start %}
+
+    <h1> Django Practice </h1> 
+
+    <table class="container">
+        <tr>
+          <th>S.NO</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Can Vote</th>
+        </tr>
+        <tr>
+        {% for people in peoples%}
+          <td>{{forloop.counter}}</td>
+          <td>{{people.Name}}</td>
+          <td>{{people.age}}</td>
+          <td {% if people.age <= 18 %} style="background:red" {% endif %}>
+            {% if people.age >= 18 %}
+                👍
+            {% else %}
+                👎
+            {% endif %}
+          </td>
+        </tr>
+
+        {% endfor %}
+       
+
+      </table>
+
+      <p>
+        {% if "cucumber" in vegetables %}
+          Yes
+        {% elif "Tomato" in vegetables %}
+          Yes
+        {% endif %}
+      </p>
+      <br>
+      <a href="/contact/">
+        Contact 
+      </a>
+      |
+      <a href="/about/">
+        ABOUT
+      </a>
+
+
+{% endblock %}
