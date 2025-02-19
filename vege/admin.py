@@ -1,10 +1,12 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import *
 
-
+# Register other models
 admin.site.register(Receipe)
-admin.site.register(StudentID)
-admin.site.register(Student)
 admin.site.register(Department)
+
+# Use Session model without registering it
+from django.contrib.sessions.models import Session
+
+# Example: Query sessions (optional logic)
+sessions = Session.objects.all()

@@ -1,0 +1,183 @@
+{% extends 'kitchenbase/kitchenbase.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .bill-container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 900px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        transform: translateY(-20px);
+        animation: slideIn 0.6s ease-in-out forwards;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .bill-container h2 {
+        margin-bottom: 20px;
+        font-size: 30px;
+        color: #333;
+    }
+
+    .info-item {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    .bill-total {
+        font-weight: bold;
+        font-size: 24px;
+        border-top: 2px solid #ddd;
+        padding-top: 20px;
+        margin-top: 20px;
+        color: #000;
+    }
+
+    .pay-btn {
+        background: #069370;
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        font-size: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+
+    .pay-btn:hover {
+        background: #056a53;
+        transform: scale(1.05);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+</style>
+
+<div class="content">
+    <div class="bill-container">
+        <h2>🏠 Kitchen Earnings Summary</h2>
+
+        <!-- Kitchen Name -->
+        <div class="info-item">
+            <strong>🍽️ Kitchen Name:</strong> {{ kitchen.kitchen_name }}
+        </div>
+
+        <!-- Kitchen Address -->
+        <div class="info-item">
+            <strong>📍 Location:</strong> {{ kitchen.kitchen_place }}
+        </div>
+
+        <!-- Kitchen Status -->
+        <div class="info-item">
+            <strong>✅ Kitchen Status:</strong> {% if kitchen.is_active %} Active {% else %} Inactive {% endif %}
+        </div>
+
+        <div class="bill-total">
+            <span>Grand Total</span>
+            <h2>Your Total Earnings: ₹{{ kitchen_earning }}</h2>
+        </div>
+
+        <!-- Razorpay Payment Button -->
+        <button type="button" class="pay-btn" id="paykitchen-btn">Withdraw Earnings</button>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById("paykitchen-btn").onclick = function (e) {
+        e.preventDefault();
+        console.log("Withdraw Earnings Button Clicked!");  // Debugging statement
+    
+        // Fetch the total earnings from the template and convert to paise
+        const totalEarnings = parseFloat("{{ kitchen_earning }}") * 100;  
+        console.log("Total Earnings (Paise):", totalEarnings);
+    
+        if (isNaN(totalEarnings) || totalEarnings <= 0) {
+            alert("No earnings available for withdrawal.");
+            return;
+        }
+    
+        var options = {
+            "key": "{{ razorpay_key }}",  
+            "amount": totalEarnings, 
+            "currency": "INR",
+            "name": "HomeConnect",
+            "description": "Earnings Withdrawal",
+            "handler": function (response) {
+                console.log("Payment successful:", response);
+    
+                // AJAX call to reset earnings
+                fetch("{% url 'reset_kitchenearnings' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({
+                        payment_id: response.razorpay_payment_id,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Reset earnings response:", data);
+                    if (data.success) {
+                        alert("Earnings withdrawn successfully!");
+                        window.location.reload();  // Reload the page
+                    } else {
+                        alert("Failed to reset earnings. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                });
+            },
+            "prefill": {
+                "name": "{{ request.session.kitchen_name }}",
+                "email": "{{ request.session.kitchen_email }}",
+                "contact": "{{ request.session.kitchen_contact }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+    
+        console.log("Razorpay options:", options);
+    
+        // Open Razorpay payment modal
+        var rzpkitchen = new Razorpay(options);
+        rzpkitchen.open();
+    };
+</script>
+
+{% endblock %}

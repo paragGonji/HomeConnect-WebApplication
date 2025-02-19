@@ -1,0 +1,170 @@
+{% extends 'deliverybase/deliverybase.html' %}
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        width: 100%;
+
+    }
+
+    .bill-container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 900px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        transform: translateY(-20px);
+        animation: slideIn 0.6s ease-in-out forwards;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .bill-container h2 {
+        margin-bottom: 20px;
+        font-size: 30px;
+        color: #333;
+    }
+
+    .info-item {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #555;
+    }
+
+    .bill-total {
+        font-weight: bold;
+        font-size: 24px;
+        border-top: 2px solid #ddd;
+        padding-top: 20px;
+        margin-top: 20px;
+        color: #000;
+    }
+
+    .pay-btn {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        font-size: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .pay-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    }
+</style>
+<div class="content">
+    <div class="bill-container">
+        <h2>📊 Delivery Earnings Summary</h2>
+        
+        <!-- Delivery Person's Name -->
+        <div class="info-item">
+            <strong>🏍️ Delivery Person:</strong> {{ delivery_person.delivery_name }}
+        </div>
+
+        <!-- Service Area -->
+        <div class="info-item">
+            <strong>📍 Service Area:</strong> {{ delivery_person.delivery_area }}
+        </div>
+
+        <!-- Completed Deliveries -->
+        <div class="info-item">
+            <strong>📦 Person Status:</strong> {{ delivery_person.delivery_status }}
+        </div>
+
+        <!-- Total Earnings -->
+        <div class="bill-total">
+            <span>Total Earnings:</span>
+            <span id="total-earnings">₹{{ delivery_person.total_earnings }}</span>
+        </div>
+
+        <!-- Razorpay Payment Button -->
+        <button type="button" class="pay-btn" id="pay-btn">Withdraw Earnings</button>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById("pay-btn").onclick = function (e) {
+        e.preventDefault();
+
+        // Fetch the total earnings from the page
+        const totalEarnings = parseFloat("{{ delivery_person.total_earnings }}") * 100; // Convert to paise
+
+        // Razorpay options
+        var options = {
+            "key": "{{ razorpay_key }}",  // Razorpay key from Django
+            "amount": totalEarnings, // Amount in paise
+            "currency": "INR",
+            "name": "HomeConnect",
+            "description": "Earnings Withdrawal",
+            "handler": function (response) {
+                // On successful payment, make an AJAX call to reset earnings
+                fetch("{% url 'reset_earnings' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}", // Include CSRF token for security
+                    },
+                    body: JSON.stringify({
+                        payment_id: response.razorpay_payment_id,
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload the page to reflect the updated earnings
+                        window.location.reload();
+                    } else {
+                        alert("Failed to reset earnings. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred. Please try again.");
+                });
+            },
+            "prefill": {
+                "name": "{{ delivery_person.delivery_name }}",
+                "email": "{{ delivery_person.delivery_email }}",
+                "contact": "{{ delivery_person.delivery_contact }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        // Open Razorpay payment modal
+        var rzp = new Razorpay(options);
+        rzp.open();
+    };
+</script>
+{% endblock %}

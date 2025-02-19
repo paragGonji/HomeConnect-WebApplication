@@ -1,7 +1,104 @@
-{% extends "base.html" %}
-{% block start %}
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            transition: background-color 0.5s ease-in-out;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 {
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-in-out;
+            font-size: 24px;
+            color: #ff5e62;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .mb-3 {
+            width: 100%;
+            margin-bottom: 15px;
+            text-align: left;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+        .mb-3 label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .mb-3 input {
+            width: 95%;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            font-size: 16px;
+        }
+        .mb-3 input:focus {
+            border-color: #ff5e62;
+            box-shadow: 0px 0px 12px rgba(255, 94, 98, 0.5);
+            outline: none;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(255, 94, 98, 0.3);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+            transform: scale(1.1);
+            box-shadow: 0px 6px 14px rgba(255, 94, 98, 0.5);
+        }
+        p a {
+            text-decoration: none;
+            color: #ff5e62;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        p a:hover {
+            color: #e65c00;
+        }
+        form {
+            animation: popUp 0.5s ease-in-out;
+        }
+        @keyframes popUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
 <div class = "container mt-5">
 
     <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
@@ -14,42 +111,26 @@
             {{ message }}
             {% endfor %}
           </div>
-
-{% endif %}
-
-
-
-
-
+        {% endif %}
         <div class="mb-3">
             <label for="exampleInputEmail1">First Name</label>
             <input name="first_name" required type="text" class="form-control" >
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputEmail1">Last name</label>
-            <input name="last_name" required type="text" class="form-control" >
-          </div>
+        </div>
         <div class="mb-3">
-          <label for="exampleInputEmail1">Username</label>
-          <input name="username" required type="text" class="form-control" >
+            <label for="exampleInputEmail1">Last Name</label>
+            <input name="last_name" required type="text" class="form-control" >
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1">Username</label>
+            <input name="username" required type="text" class="form-control" >
         </div>
         <div class="mb-3">
             <label for="exampleInputPassword1">Password</label>
             <input name="password" required type="password" class="form-control" >
         </div>
-
-        <p>Already have an account ?  <a href="/login/">Login</a></p>
-
+        <p>Already have an account? <a href="/login/">Login</a></p>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
-
-
-
-
-
-
 </div>
-
-
-
-{% endblock %}
+</body>
+</html>

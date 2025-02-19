@@ -1,0 +1,173 @@
+{% extends 'deliverybase/deliverybase.html' %}
+{% block content %}
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    font-family: 'Josefin Sans', sans-serif;
+  }
+
+  body {
+    background-color: #f8f8f8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wrapper {
+    position: relative;
+    width: 90vw;
+    height: 85vh;
+    max-width: 1200px;
+    margin-top: 80px;
+    display: flex;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .wrapper .left {
+    width: 40%;
+    background: linear-gradient(to right, #007bff, #00aaff);
+    padding: 40px 30px;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wrapper .left img {
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .wrapper .left img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .wrapper .left h4 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .wrapper .left p {
+    font-size: 14px;
+    color: #e0e0e0;
+  }
+
+  .wrapper .right {
+    width: 60%;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .wrapper .right .info,
+  .wrapper .right .orders {
+    margin-bottom: 30px;
+  }
+
+  .wrapper .right .info h3,
+  .wrapper .right .orders h3 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    color: #007bff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 20px;
+  }
+
+  .wrapper .right .info_data,
+  .wrapper .right .orders_data {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .wrapper .right .info_data .data,
+  .wrapper .right .orders_data .data {
+    width: 48%;
+  }
+
+  .wrapper .right .info_data .data h4,
+  .wrapper .right .orders_data .data h4 {
+    color: #007bff;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .wrapper .right .info_data .data p,
+  .wrapper .right .orders_data .data p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
+  }
+</style>
+
+<div class="wrapper">
+  <div class="left">
+    {% if delivery_person.delivery_image %}
+      <img src="{{ delivery_person.delivery_image.url }}" alt="Delivery Person Image">
+    {% else %}
+      <img src="/media/delivery/default_image.png" alt="Default Delivery Image">
+    {% endif %}
+    <h4>{{ delivery_person.delivery_name }}</h4>
+    <p>{{ delivery_person.delivery_area }}</p>
+  </div>
+  <div class="right">
+    <div class="info">
+      <h3>Information</h3>
+      <div class="info_data">
+        <div class="data">
+          <h4>Email</h4>
+          <p>{{ delivery_person.delivery_email }}</p>
+        </div>
+        <div class="data">
+          <h4>Contact</h4>
+          <p>{{ delivery_person.delivery_contact }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="orders">
+      <h3>Delivery Details</h3>
+      <div class="orders_data">
+        <div class="data">
+          <h4>Address</h4>
+          <p>{{ delivery_person.delivery_address }}</p>
+        </div>
+        <div class="data">
+          <h4>Status</h4>
+          <p>{% if delivery_person.delivery_status %}Active{% else %}Inactive{% endif %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'deliverybase/deliverybase.html' %}
+
+{% block content %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        /* General Styles */
+       /* Cart Section */
+.cart-container {
+    width: 90%;
+    max-width: 1200px;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-top: 100px; /* Add margin-top to create space between navbar and content */
+}
+
+/* Optionally, you can add padding to the body as well for extra space */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 20px; /* Optional: padding to give space from the top */
+}
+
+
+        /* Header */
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* User Details */
+        .user-details {
+            background-color:white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 6px 15px rgba(0, 0, 0, 0.05); /* Softer, layered shadows */
+            margin-bottom: 30px;
+        }
+
+        .user-details p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .user-details strong {
+            font-weight: bold;
+            color: #2575fc;
+        }
+
+        /* Cart Items */
+        .cart-items {
+            padding-top: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 25px;
+            border-bottom: 2px solid #ddd;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .cart-item img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+        }
+
+        .cart-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-info h2 {
+            font-size: 24px;
+            margin: 0;
+            color: #222;
+        }
+
+        .cart-info p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 22px;
+            color: #2575fc;
+        }
+
+        .location {
+            font-size: 18px;
+            color: #000;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Total Section - Right Aligned */
+        .total-section {
+            padding: 20px 0;
+            text-align: right;
+        }
+
+        .total-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            font-size: 18px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+            display: inline-block;
+        }
+
+        .checkout-btn:hover {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            transform: scale(1.08);
+        }
+
+        .empty-cart {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+            padding: 20px;
+        }
+
+    </style>
+<br><br><br><br><br>
+ <!-- User Details Section -->
+ <div class="cart-container">
+    <h1>Order Summary</h1>
+
+    <!-- User Details Section -->
+    {% if user_details %}
+        <div class="user-details">
+            <h3>Delivery Information</h3>
+            <p><strong>Phone Number:</strong> {{ user_details.phone_number }}</p>
+            <p><strong>Address:</strong> {{ user_details.uservege_address }}</p>
+        </div>
+    {% else %}
+        <p class="empty-cart"></p>
+    {% endif %}
+
+    <!-- Cart Items Section -->
+    {% if cart %}
+        <div class="cart-items">
+            {% for item_id, item in cart.items %}
+                <div class="cart-item">
+                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                    <div class="cart-info">
+                        <h2>{{ item.name }}</h2>
+                        <p>Quantity: {{ item.quantity }}</p>
+                        <p class="location">Location: {{ item.loaction }}</p>
+                        <div class="price">₹ {{ item.price }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="total-section">
+            <p class="total-price">Total Price: ₹ {{ total_price }}</p>
+            <a href="{% url 'delivery_location' %}" class="checkout-btn">Take Order</a>
+        </div>
+    {% else %}
+        <p class="empty-cart">No Orders Right Now</p>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

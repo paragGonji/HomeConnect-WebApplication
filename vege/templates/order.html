@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- jQuery (Required for Bootstrap JS) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            overflow-x: hidden;
+            background-repeat: no-repeat;
+
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            width: 100vw;
+            height: 80px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff5733;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .cart-item:hover {
+            background-color: #f1f1f1;
+            transform: scale(1.02);
+        }
+
+        .cart-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .cart-info h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .cart-item:hover .cart-info h2 {
+            color: #ff5733;
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .cart-item:hover .price {
+            color: #ff5733;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            background-color: #ff5733;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            background-color: #e64a19;
+        }
+
+        .empty-cart {
+            text-align: center;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .user-details {
+            background-color: white;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 20px;
+            max-width: 500px;
+            border: 1px solid #ff5733;
+        }
+        
+        .user-details p {
+            font-size: 16px;
+            font-weight: 500;
+            color: #444;
+            margin-bottom: 10px;
+        }
+        
+        .user-details p strong {
+            color: #ff5733;
+            font-size: 18px;
+        }
+        .card {
+            z-index: 0;
+            background-color: #ECEFF1;
+            padding-bottom: 20px;
+            margin-top: 90px;
+            margin-bottom: 90px;
+            border-radius: 10px;
+        }   
+.top {
+    padding-top: 40px;
+    padding-left: 13% !important;
+    padding-right: 13% !important;
+}
+
+/*Icon progressbar*/
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: #455A64;
+    padding-left: 0px;
+    margin-top: 30px;
+} 
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 13px;
+    width: 25%;
+    float: left;
+    position: relative;
+    font-weight: 400;
+}
+
+#progressbar .step0:before {
+    font-family: FontAwesome;
+    content: "\f10c";
+    color: #fff;
+}
+
+#progressbar li:before {
+    width: 40px;
+    height: 40px;
+    line-height: 45px;
+    display: block;
+    font-size: 20px;
+    background: #C5CAE9;
+    border-radius: 50%;
+    margin: auto;
+    padding: 0px;
+}
+
+/*ProgressBar connectors*/
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 12px;
+    background: #C5CAE9;
+    position: absolute;
+    left: 0;
+    top: 16px;
+    z-index: -1;
+}
+
+#progressbar li:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: absolute;
+    left: -50%;
+}
+
+#progressbar li:nth-child(2):after, #progressbar li:nth-child(3):after {
+    left: -50%;
+}
+
+#progressbar li:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    left: 50%;
+}
+
+#progressbar li:last-child:after {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#progressbar li:first-child:after {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+/*Color number of the step and the connector before it*/
+#progressbar li.active:before, #progressbar li.active:after {
+    background: #651FFF;
+}
+
+#progressbar li.active:before {
+    font-family: FontAwesome;
+    content: "\f00c";
+}
+
+.icon {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+}
+
+.icon-content { 
+    padding-bottom: 20px;
+}
+
+@media screen and (max-width: 992px) {
+    .icon-content {
+        width: 50%;
+    }
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="/media/images/logo.jpg" alt="Logo" class="logo">
+        <div class="nav-links">
+            <a href="{% url 'homeconnect' %}">HomeConnect</a>
+            <a href="{% url 'receipes' %}">Kitchen</a>
+            <a href="{% url 'order' %}">Order</a>
+            <a href="{% url 'popular' %}">Popular</a>
+            <a href="{% url 'cart' %}">Cart</a>
+            <a href="{% url 'logout_page' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Order Summary</h1>
+        <div class="user-details">
+            <p><strong>Phone Number:</strong> {{ user_details.phone_number }}</p>
+            <p><strong>Address:</strong> {{ user_details.uservege_address }}</p>
+        </div>
+
+        {% if cart %}
+            <div class="cart-items">
+                {% for item_id, item in cart.items %}
+                    <div class="cart-item">
+                        <img src="{{ item.image }}" alt="{{ item.name }}">
+                        <div class="cart-info">
+                            <h2>{{ item.name }}</h2>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <div class="price">₹ {{ item.price }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="total-section">
+                <p class="total-price">Total Price: ₹ {{ total_price }}</p>
+            </div>
+        {% else %}
+            <p class="empty-cart">Your cart is empty!</p>
+        {% endif %}
+    </div>
+
+    <div class="container px-1 px-md-4 py-5 mx-auto">         
+        <h1>Preparing Order</h1>
+        <div class="card">
+            <div class="row d-flex justify-content-between px-3 top">
+                <div class="d-flex">
+                    <h5>ORDER <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+                </div>
+                <div class="d-flex flex-column text-sm-right">
+                    <p class="mb-0">Expected Arrival <span id="current-date"></span></p>
+                    <p>USPS <span class="font-weight-bold">234094567242423422898</span></p>
+                </div>
+            </div>
+            <!-- Add class 'active' to progress -->
+            <div class="row d-flex justify-content-center">
+                <div class="col-12">
+                <ul id="progressbar" class="text-center">
+                    <li class="active step0"></li>
+                    <li class="active step0"></li>
+                    <li class="active step0"></li>
+                    <li class="step0"></li>
+                </ul>
+                </div>
+            </div>
+            <div class="row justify-content-between top">
+                <div class="row d-flex icon-content">
+                    <img class="icon" src="https://i.imgur.com/9nnc9Et.png">
+                    <div class="d-flex flex-column">
+                        <p class="font-weight-bold">Order<br>Processed</p>
+                    </div>
+                </div>
+                <div class="row d-flex icon-content">
+                    <img class="icon" src="https://i.imgur.com/u1AzR7w.png">
+                    <div class="d-flex flex-column">
+                        <p class="font-weight-bold">Order<br>Shipped</p>
+                    </div>
+                </div>
+                <div class="row d-flex icon-content">
+                    <img class="icon" src="https://i.imgur.com/TkPm63y.png">
+                    <div class="d-flex flex-column">
+                        <p class="font-weight-bold">Order<br>in Route</p>
+                    </div>
+                </div>
+                <div class="row d-flex icon-content">
+                    <img class="icon" src="https://i.imgur.com/HdsziHP.png">
+                    <div class="d-flex flex-column">
+                        <p class="font-weight-bold">Order<br>Arrived</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get today's date
+        let today = new Date();
+        let formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    
+        // Insert the date into the expected arrival section
+        document.getElementById("current-date").innerText = formattedDate;
+    </script>
+    
+</body>
+</html>

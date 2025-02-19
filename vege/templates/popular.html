@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Listings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            width: 100vw;
+            height: 80px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff5733;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .pizza-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            max-width: 95%;
+            padding: 25px;
+            justify-content: center;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            width: 270px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            cursor : pointer;
+        }
+        
+        .pizza-container:hover > :not(:hover){
+            opacity : 0.3;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        
+        .card-content {
+            padding: 18px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            color: #222;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 8px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .btn {
+            display: block;
+            width: 60%;
+            text-align: center;
+            margin: 15px auto 0;
+            background: linear-gradient(45deg, #ff5733, #ff914d);
+            color: white;
+            padding: 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #ff914d, #ff5733);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 1024px) {
+            .pizza-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pizza-container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+
+        /* Custom Popup Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .popup-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .popup-content p {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .popup-content button {
+            background: linear-gradient(45deg, #ff5733, #ff914d);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .popup-content button:hover {
+            background: linear-gradient(45deg, #ff914d, #ff5733);
+            transform: scale(1.05);
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -55%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="/media/images/logo.jpg" alt="Logo" class="logo">
+        <div class="nav-links">
+            <a href="{% url 'homeconnect' %}">HomeConnect</a>
+            <a href="{% url 'receipes' %}">Kitchen</a>
+            <a href="{% url 'order' %}">Order</a>
+            <a href="{% url 'popular' %}">Popular</a>
+            <a href="{% url 'cart' %}">Cart</a>
+            <a href="{% url 'logout_page' %}">Logout</a>
+        </div>
+    </nav>
+    <br><br><br>
+    <h1> Popular Listings</h1>
+    <br><br>
+    <div class="pizza-container">
+        {% for recipe in recipes %}
+        <div class="card">
+            <img src="/media/{{ recipe.dish_image }}" alt="{{ recipe.dish_name }}">
+            <div class="card-content">
+                <h3>{{ recipe.dish_name }}</h3>
+                <p>{{ recipe.dish_description|truncatewords:5 }}</p>
+                <a href="#" class="btn" onclick="addToCart('{{ recipe.id }}')">Order Now</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Custom Pop-up Modal -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <p id="popup-message"></p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function addToCart(dishId) {
+            let formData = new FormData();
+            formData.append("dish_id", dishId);
+            formData.append("quantity", 1);
+    
+            fetch("{% url 'add_to_cart' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCSRFToken(),  // CSRF token for security
+                },
+                body: formData,  // Send as FormData instead of JSON
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text(); // Because Django redirects instead of returning JSON
+            })
+            .then(() => {
+                showPopup("Dish added to cart successfully!");
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                showPopup("Something went wrong!");
+            });
+        }
+    
+        function getCSRFToken() {
+            const cookieValue = document.cookie
+                .split("; ")
+                .find(row => row.startsWith("csrftoken="))
+                ?.split("=")[1];
+            return cookieValue || "";
+        }
+    
+        function showPopup(message) {
+            document.getElementById("popup-message").innerText = message;
+            document.getElementById("popup").style.display = "block";
+        }
+    
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
+    
+    
+    
+   
+    {% include 'footer.html' %}
+</body>
+</html>

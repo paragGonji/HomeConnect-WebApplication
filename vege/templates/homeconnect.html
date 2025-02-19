@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeConnect</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #1C1C1C;
+        }
+    
+        .hero-section {
+            background: url("/media/images/zomato-background.avif") no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            min-height: 60vh;
+        }
+    
+
+        .hero-section h1 {
+            font-size: 50px; /* Big font size for main heading */
+            font-weight: bold; /* Bold text */
+            letter-spacing: 2px; /* Add spacing between letters */
+            text-transform: uppercase; /* Make the text uppercase */
+            margin-bottom: 15px; /* Space between headings */
+            color: white; /* Pure white color */
+        }
+        
+        .hero-section h2 {
+            font-size: 22px; /* Slightly smaller size for subheading */
+            font-weight: normal; /* Lighter font weight */
+            letter-spacing: 1px; /* Letter spacing for readability */
+            color: white; /* Pure white color */
+            margin-top: 0; /* No margin at the top */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.5); /* Glowing effect */
+        }
+        
+        
+        .container {
+            padding: 50px;
+        }
+    
+        .search-bar {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+        }
+    
+        .search-bar input {
+            border: none;
+            width: 100%;
+            padding: 10px;
+        }
+    
+        .search-bar input:focus {
+            outline: none;
+        }
+    
+        /* Card container and individual cards */
+        .card-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
+    
+        .card {
+            width: 200px; /* Slightly wider for a more balanced look */
+            height: 270px; /* Fixed height to make the cards uniform */
+            margin: 15px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #fff;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            overflow: hidden; /* Ensure content fits within the card */
+        }
+    
+        /* Add hover effect to the card */
+        .card:hover {
+            transform: translateY(-10px); /* Slightly lift the card */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+        }
+    
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+    
+        /* Zoom effect on image hover */
+        .card img:hover {
+            transform: scale(1.1);
+        }
+    
+        .card h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+    
+        .card p {
+            font-size: 14px;
+            color: #666;
+        }
+    
+        /* Footer Styles */
+        .footer {
+            background: #f8f8f8;
+            padding: 40px 20px;
+            margin-top: 40px;
+        }
+    
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+    
+        .footer-section h3 {
+            color: #1C1C1C;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+    
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+    
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+    
+        .footer-section ul li a {
+            color: #696969;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    
+        .footer-section ul li a:hover {
+            color: #1C1C1C;
+        }
+    
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+    
+        .app-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    
+        .app-buttons img {
+            height: 40px;
+        }
+    
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid #E8E8E8;
+            font-size: 12px;
+            color: #696969;
+        }
+    
+        .language-selector {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+    
+        .language-button {
+            padding: 8px 15px;
+            border: 1px solid #E8E8E8;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    
+        .profile-pic {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px black; /* Adds a clean white border around the profile picture */
+            transition: all 0.3s ease-in-out; /* Smooth transition for the glow effect */
+        }
+    
+        .profile-pic:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 255, 1); /* Intensifies the glow effect on hover */
+            transform: scale(1.05); /* Slightly enlarges the profile picture on hover */
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Check if the user has a profile picture and display it -->
+    {% if user.profile.user_image %}
+        <img src="{{ user.profile.user_image.url }}" alt="Profile Picture" class="profile-pic">
+    {% else %}
+        <img src="{% static 'default_profile.png' %}" alt="Profile Picture" class="profile-pic">
+    {% endif %}
+
+    <div class="hero-section">
+        <div class="container">
+            <br> <br>
+            <h1>Home Connect</h1>
+            <h2>Discover the best food & drinks from Home Kichen</h2>
+
+            
+            <br>
+            <div class="card-container">
+                <div class="card">
+                    <a href="{% url 'receipes' %}"> <!-- Assuming 'receipes' is the name of the URL pattern -->
+                        <img src="/media/images/butter-c-food-1.jpg" alt="Order Online">
+                    </a>
+                    <h3>Order Online</h3>
+                    <p>Stay home and order to your doorstep</p>
+                </div>
+                
+                <div class="card">
+                    <a href="{% url 'receipe_suggestion' %}">
+                    <img src="/media/images/kitchen2.jpg" alt="Order Online">
+                </a>
+                    <h3>Search Recipes</h3>
+                    <p>Find New and Unique Recipes from Ai</p>
+                </div>
+                <div class="card">
+                    <a href="{% url 'popular' %}">
+                    <img src="/media/images/populat.jpg" alt="Order Online">
+                </a>
+                    <h3>Popular</h3>
+                    <p>Discover new and most popular sharwma</p>
+                </div>
+            </div>
+            <br> 
+        </div>
+    </div>
+    <body>
+        <br><br><br><br>
+
+    
+        <footer class="footer">
+            <div class="language-selector">
+                <button class="language-button">🇮🇳 India</button>
+                <button class="language-button">🌐 English</button>
+            </div>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ABOUT HomeConnect</h3>
+                    <ul>
+                        <li><a href="https://paraggonji.github.io/portfolio-template/">Who We Are</a></li>
+                        <li><a href="https://paraggonji.github.io/portfolio-template/">Blog</a></li>
+                        <li><a href="https://paraggonji.github.io/portfolio-template/">Work With Us</a></li>
+    
+                        <li><a href="https://paraggonji.github.io/portfolio-template/">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>FOR RESTAURANTS</h3>
+                    <ul>
+                        <li><a href="https://paraggonji.github.io/portfolio-template/">Partner With Us</a></li>
+                    </ul>
+                   
+                </div>
+                <div class="footer-section">
+                    <h3>SOCIAL LINKS</h3>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/parag-gonji/"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" width="24" height="24"></a>
+                        <a href="https://www.instagram.com/ig.parag36"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+                        <a href="https://x.com/GonjiParag"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968830.png" alt="X (Twitter)" width="24" height="24"></a>
+                        <a href="https://www.youtube.com/@paraggonji36"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" width="24" height="24"></a>
+                    </div>
+    
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>By continuing past this page, you agree to our Terms of Service, Cookie Policy, Privacy Policy, and Content Policies. All trademarks are properties of their respective owners. 2024-2025 © HomeConnect™ Ltd. All rights reserved.</p>
+            </div>
+        </footer>
+    
+    </body>
+    </html>
+    

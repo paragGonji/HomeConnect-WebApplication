@@ -1,0 +1,208 @@
+{% extends 'kitchenbase/kitchenbase.html' %}
+{% block content %}
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    font-family: 'Josefin Sans', sans-serif;
+  }
+
+  body {
+    background-color: #f8f8f8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+  }
+
+  .wrapper {
+    position: relative;
+    width: 90vw; /* Reduced by 5% from each side (95% - 5%) */
+    height: 85vh; /* Reduced by 5% from each side (90% - 5%) */
+    max-width: 1200px; /* Optional: Set a maximum width for larger screens */
+    margin-top: 80px; /* Added space for the navbar */
+    display: flex;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    animation: fadeIn 1s ease-in-out; /* Add fade-in animation */
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .wrapper .left {
+    width: 40%;
+    background: linear-gradient(to right, #069370, #0abf8c);
+    padding: 40px 30px;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wrapper .left img {
+    border-radius: 10px;
+    margin-bottom: 20px;
+    width: 200px; /* Increased image size */
+    height: 200px; /* Increased image size */
+    object-fit: cover;
+    border: 4px solid #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add hover effect */
+  }
+
+  .wrapper .left img:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+  }
+
+  .wrapper .left h4 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .wrapper .left p {
+    font-size: 14px;
+    color: #e0e0e0;
+  }
+
+  .wrapper .right {
+    width: 60%;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .wrapper .right .info,
+  .wrapper .right .projects {
+    margin-bottom: 30px;
+  }
+
+  .wrapper .right .info h3,
+  .wrapper .right .projects h3 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    color: #069370;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 20px;
+  }
+
+  .wrapper .right .info_data,
+  .wrapper .right .projects_data {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .wrapper .right .info_data .data,
+  .wrapper .right .projects_data .data {
+    width: 48%;
+  }
+
+  .wrapper .right .info_data .data h4,
+  .wrapper .right .projects_data .data h4 {
+    color: #069370;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .wrapper .right .info_data .data p,
+  .wrapper .right .projects_data .data p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #555;
+  }
+
+  .wrapper .social_media ul {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .wrapper .social_media ul li {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(to right, #069370, #0abf8c);
+    margin-right: 15px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    transition: transform 0.3s ease;
+  }
+
+  .wrapper .social_media ul li:hover {
+    transform: scale(1.1);
+  }
+
+  .wrapper .social_media ul li a {
+    color: #fff;
+    display: block;
+    font-size: 20px;
+  }
+</style>
+
+<div class="wrapper">
+  <div class="left">
+    {% if kitchen_image_url %}
+      <img src="{{ kitchen_image_url }}" alt="Kitchen Image">
+    {% else %}
+      <img src="/media/kitchen/default_image.png" alt="Default Kitchen Image">
+    {% endif %}
+    <h4>{{ kitchen_info.kitchen_name }}</h4>
+    <p>{{ kitchen_info.kitchen_place }}</p>
+  </div>
+  <div class="right">
+    <div class="info">
+      <h3>Information</h3>
+      <div class="info_data">
+        <div class="data">
+          <h4>Description</h4>
+          <p>{{ kitchen_info.kitchen_description }}</p>
+        </div>
+        <div class="data">
+          <h4>Address</h4>
+          <p>{{ kitchen_info.kitchen_address }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="projects">
+      <h3>Details</h3>
+      <div class="projects_data">
+        <div class="data">
+          <h4>Place</h4>
+          <p>{{ kitchen_info.kitchen_place }}</p>
+        </div>
+        <div class="data">
+          <h4>Status</h4>
+          <p>Active</p>
+        </div>
+      </div>
+    </div>
+    <div class="social_media">
+      <ul>
+        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

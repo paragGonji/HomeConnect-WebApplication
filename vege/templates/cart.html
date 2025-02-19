@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            width: 100vw;
+            height: 80px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #ff5733;
+        }
+       
+        .container {
+            width: 90vw;
+            max-width: 1400px;
+            margin: 40px auto;
+            transition: all 0.3s ease-in-out;
+        }
+
+        h1 {
+            text-align: left;
+            color: rgb(255, 64, 54);
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .cart-item {
+            background-color: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+        }
+
+        .cart-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-item img {
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .cart-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cart-info h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .cart-info p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e76f51;
+        }
+
+        .preparation-time {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2a9d8f;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .quantity-input {
+            width: 100%;
+            max-width: 150px;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #2a9d8f;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .update-button,
+        .delete-button {
+            background: linear-gradient(45deg, #ff6347, #ff5733);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 150px;
+            height: 48px;
+            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .update-button:hover,
+        .delete-button:hover {
+            background: linear-gradient(45deg, #ff5733, #ff6347);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .total-section {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 30px;
+            color: #000;
+        }
+
+        .total-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .total-preparation-time {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2a9d8f;
+            margin-top: 5px;
+        }
+
+        .checkout-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff5733, #ff914d);
+            color: white;
+            padding: 18px 28px;
+            text-align: center;
+            border-radius: 15px;
+            font-size: 22px;
+            width: auto;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 30px;
+            transition: all 0.4s ease-in-out;
+            float: right;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid transparent;
+        }
+
+        .checkout-btn:hover {
+            background: linear-gradient(45deg, #ff914d, #ff5733);
+            transform: scale(1.08);
+            box-shadow: 0 6px 15px rgba(255, 87, 51, 0.5);
+            border: 2px solid #ff5733;
+        }
+
+        /* Styling the user details section */
+        .user-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin-top: 40px;
+            max-width: 600px;
+            width: 100%;
+            margin-left: 0; /* Align to left */
+            margin-right: auto;
+            border: none; /* Remove border */
+            box-shadow: none; /* Remove shadow */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Label styling */
+        .user-details label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        /* Input styling */
+        .user-details input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd; /* Light border */
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Input focus effect */
+        .user-details input:focus {
+            background-color: #fff;
+            border-color: #ff5733; /* Border color change on focus */
+        }
+
+        /* Button styling */
+        .user-details button {
+            width: 100%;
+            padding: 14px;
+            background-color: #ff5733;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Button hover effect */
+        .user-details button:hover {
+            background-color: #e64a19;
+        }
+
+        /* Position the form to the left */
+        .container {
+            width: 90vw;
+            max-width: 1400px;
+            margin: 40px auto;
+            display: flex;
+            justify-content: flex-start; /* Align left */
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .user-details {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="/media/images/logo.jpg" alt="Logo" class="logo">
+        <div class="nav-links">
+            <a href="{% url 'homeconnect' %}">HomeConnect</a>
+            <a href="{% url 'receipes' %}">Kitchen</a>
+            <a href="{% url 'order' %}">Order</a>
+            <a href="{% url 'popular' %}">Popular</a>
+            <a href="{% url 'cart' %}">Cart</a>
+            <a href="{% url 'logout_page' %}">Logout</a>
+        </div>
+    </nav><br><br>
+    <div class="container">
+        <h1>Your Cart</h1>
+        {% if cart %}
+            <div class="cart-items">
+                {% for item_id, item in cart.items %}
+                    <div class="cart-item">
+                        <img src="{{ item.image }}" alt="{{ item.name }}">
+                        
+                        <div class="cart-info">
+                            <h2>{{ item.name }}</h2>
+                            <p>{{ item.description }}</p>
+                            <div class="price">₹ {{ item.price }}</div>
+                        </div>
+
+                        <div class="actions">
+                            <form method="POST" action="{% url 'update_quantity' item_id %}">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input">
+                                <button type="submit" class="update-button">Update</button>
+                            </form>
+                            <form method="POST" action="{% url 'delete_item' item_id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="total-section">
+                <p class="total-price">Total Price: ₹ {{ total_price }}</p>
+            </div>
+
+            <!-- Phone Number and Address Section -->
+            <div class="user-details">
+                <h2>Delivery Details</h2>
+                <form method="POST" action="{% url 'save_user_details' %}">
+                    {% csrf_token %}
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="text" id="phone_number" name="phone_number" value="{{ user_details.phone_number }}" required>
+
+                    <label for="uservege_address">Address:</label>
+                    <input type="text" id="uservege_address" name="uservege_address" value="{{ user_details.uservege_address }}" required>
+
+                    <button type="submit" class="save-details-btn">Save Details</button>
+                </form>
+            </div>
+
+            <form method="POST" id="payment-form" action="{% url 'order' %}">
+                {% csrf_token %}
+                    <button type="button" id="rzp-button" class="checkout-btn">Proceed to Checkout</button>
+                </form>           
+        {% else %}
+            <p>Your cart is empty!</p>
+        {% endif %}
+    </div><br><br><br><br><br>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key }}",  // Pass this from Django view
+        "amount": {{ total_price }} * 100, // Amount in paise
+        "currency": "INR",
+        "name": "Your Website",
+        "description": "Order Payment",
+        "handler": function (response) {
+            // Redirect to order URL with payment ID
+            window.location.href = "{% url 'verify_payment' %}?payment_id=" + response.razorpay_payment_id;
+        },
+        "prefill": {
+            "name": "{{ request.user.username }}",
+            "email": "{{ request.user.email }}",
+            "contact": "{{ user_details.phone_number }}"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+
+    var rzp = new Razorpay(options);
+    document.getElementById("rzp-button").onclick = function (e) {
+        rzp.open();
+        e.preventDefault();
+    };
+</script>
+</body>
+</html>

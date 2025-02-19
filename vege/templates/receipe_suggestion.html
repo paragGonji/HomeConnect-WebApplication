@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Suggestion</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            text-align: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ff5733;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .search-box {
+            margin: 20px auto;
+            max-width: 600px;
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: 0.3s ease-in-out;
+        }
+
+        .search-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            background: #f1f1f1;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 150, 136, 0.3);
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background: linear-gradient(45deg, #ff5733, #ff914d);
+            color: white;
+            font-weight: bold;
+            transition: 0.4s ease-in-out;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ff914d, #ff5733);
+            transform: scale(1.1);
+        }
+
+        .recipe-card {
+            background: white;
+            padding: 20px;
+            margin: 15px auto;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            text-align: left;
+            transition: 0.3s ease-in-out;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .recipe-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .recipe-image {
+            width: 150%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        img {
+            max-width: 250px;
+            height: 250px;
+            border-radius: 10px;
+            transition: 0.3s ease-in-out;
+            display: block;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        .recipe-details {
+            flex: 2;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .recipe-card h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .recipe-info-container {
+            display: flex;
+            flex-direction: column;
+            font-size: 18px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .instructions-container {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .instructions-container p {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .instructions {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            color: #444;
+            line-height: 1.7;
+            overflow-y: auto;
+            box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+            max-height: 180px;
+        }
+
+        .instructions:hover {
+            background: #ffffff;
+            box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Find Your Next Recipe</h1>
+    <form method="GET">
+        <div class="search-box">
+            <input type="text" name="query" placeholder="Search for a recipe..." value="{{ query }}">
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    {% if recipes %}
+        {% for recipe in recipes %}
+            <div class="recipe-card">
+                <div class="recipe-image">
+                    <img src="{{ recipe.strMealThumb }}" alt="{{ recipe.strMeal }}">
+                </div>
+                <div class="recipe-details">
+                    <h2>{{ recipe.strMeal }}</h2>
+                    <div class="recipe-info-container">
+                        <p><strong>Category:</strong> {{ recipe.strCategory }}</p>
+                        <p><strong>Cuisine:</strong> {{ recipe.strArea }}</p>
+                    </div>
+                    <div class="instructions-container">
+                        <p>Instructions:</p>
+                        <div class="instructions">{{ recipe.strInstructions }}</div>
+                    </div>
+                    <a href="{{ recipe.strSource }}" target="_blank">View Full Recipe</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No recipes found. Try searching for something else.</p>
+    {% endif %}
+</body>
+</html>

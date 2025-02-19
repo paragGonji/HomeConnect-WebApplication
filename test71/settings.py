@@ -37,12 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
 ]
 
 EXTERNAL_APPS = [
     'test71',
     'home',
-    'vege'
+    'vege',
+    'kitchen',
+    'delivery'
 ]
 
 INSTALLED_APPS += EXTERNAL_APPS
@@ -56,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'test71.urls'
@@ -126,18 +130,41 @@ USE_TZ = True
 
 import os
 
-STATIC_URL = 'static/'
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'public/static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILE_DIR = {
-    os.path.join(BASE_DIR, "public/static")
-}
-
-MEDIA_ROOT = os.path.join(BASE_DIR,'public/static')
+# Media files (User-uploaded content)
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'public/media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'veroforxa36@gmail.com'
+EMAIL_HOST_USER = 'veroforxa36@gmail.com'
+EMAIL_HOST_PASSWORD = 'qadqcrfeimtdritg'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# settings.py in vege app
+DELIVERY_API_URL = "http://localhost:8000/delivery/receive_order/"  # Replace with the actual URL of the delivery app
+
+
+
+
+RAZORPAY_KEY_ID = "rzp_test_XrINaHWRApuvIV"
+RAZORPAY_KEY_SECRET = "3PKnBHmTyqoQUp1vxnSphlHL"
+CORS_ORIGIN_ALLOW_ALL = True

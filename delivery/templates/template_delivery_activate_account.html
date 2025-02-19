@@ -1,0 +1,7 @@
+{% autoescape off %}
+Hi {{ user.delivery_name }},
+
+Please click on the link below to confirm your registration for Delivery:
+
+{{ protocol }}://{{ domain }}{% url 'activate_delivery' uidb64=uid token=token %}
+{% endautoescape %}

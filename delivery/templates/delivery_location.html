@@ -1,0 +1,189 @@
+{% extends 'deliverybase/deliverybase.html' %}
+{% load static %} <!-- Add this line to load the static template tag -->
+
+{% block content %}
+    <title>Delivery Order</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 70px 0 40px 40px; /* Adjusted margin to align left and account for navbar */
+            padding: 30px;
+            background-color: transparent; /* Removed background */
+            position: relative; /* Added for positioning the image */
+        }
+
+        .card {
+            border: none;
+            padding: 25px;
+            border-radius: 0; /* Removed border-radius */
+            background-color: transparent; /* Removed background */
+            animation: fadeIn 0.8s ease-in-out; /* Fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+
+        .user-details {
+            padding: 20px;
+            border-radius: 10px; /* Retained border-radius */
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Retained background */
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Retained shadow */
+            margin-bottom: 20px;
+            border-left: 5px solid #2575fc; /* Retained border-left */
+            animation: slideInLeft 0.8s ease-in-out; /* Slide-in animation */
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .list-group-item {
+            padding: 20px;
+            border: none; /* Removed border */
+            border-bottom: none; /* Removed border-bottom */
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-in-out; /* Fade-in animation for items */
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa; /* Light hover effect */
+            transform: translateY(-5px);
+        }
+
+        .total-section {
+            margin-top: 20px;
+            text-align: left;
+            animation: fadeIn 0.8s ease-in-out; /* Fade-in animation */
+        }
+
+        .checkout-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc); /* Matched navbar gradient */
+            color: white;
+            font-size: 18px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            animation: pulse 2s infinite; /* Pulse animation */
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .checkout-btn:hover {
+            background: linear-gradient(to right, #2575fc, #6a11cb); /* Reversed gradient on hover */
+            transform: scale(1.05);
+        }
+
+        .empty-cart {
+            font-size: 18px;
+            color: #888;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out; /* Fade-in animation */
+        }
+
+        .tracking-icon {
+            position: fixed; /* Fixed positioning */
+            top: 120px; /* Adjust distance from the top */
+            right: 30px; /* Adjust distance from the right */
+            width: 600px; /* Increased size */
+            height: 500px; /* Increased size */
+            animation: float 3s ease-in-out infinite; /* Floating animation */
+            z-index: 1000; /* Ensure it stays on top */
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+
+    <div class="container">
+        <!-- Tracking Icon on the Right Side -->
+        <img src="{% static 'iocn-tracking.png' %}" alt="Tracking Icon" class="tracking-icon">
+
+        <div class="card">
+            <!-- User Details Section -->
+            <div class="user-details">
+                <h3>Delivery Information</h3>
+                <p><strong>Phone Number:</strong> {{ user_details.phone_number }}</p>
+                <p><strong>Address:</strong> {{ user_details.uservege_address }}</p>
+            </div>
+
+            {% if cart %}
+                <ul class="list-group mb-4">
+                    {% for item_id, item in cart.items %}
+                        <li class="list-group-item">
+                            <h5>{{ item.name }}</h5>
+                            <p><strong>Location:</strong> {{ item.loaction }}</p>
+                            <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="total-section">
+                    <h4 class="fw-bold">Total Price: ₹ {{ total_price }}</h4>
+                    <a href="{% url 'delivered_order' %}" class="checkout-btn">Delivered</a>
+                </div>
+            {% else %}
+                <p class="empty-cart">No Order Right Now</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

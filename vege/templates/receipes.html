@@ -1,87 +1,329 @@
-{% extends "base.html" %}
-{% block start %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Recipes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+            background-color: rgb(255, 255, 255);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+        }
 
+        .navbar {
+            width: 100vw;
+            height: 80px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+        }
+        .logo {
+            width: 80px;
+            height: 100px;
+            object-fit: contain;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #ff5733;
+        }
 
-<div class = "container mt-5">
+        .content {
+            width: 80%;
+            margin-top: 40px;
+            text-align: center;
+        }
+        h2 {
+            font-family: "Dancing Script", cursive;
+            font-size: 48px;
+            color: #ff5733;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-    <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <h2>ADD Receipe</h2>
-        <hr>
-        <div class="mb-3">
-          <label for="exampleInputEmail1">Receipe name</label>
-          <input name="receipe_name" required type="text" class="form-control" >
-          
+        .search-bar {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .search-input {
+            width: 70%;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            outline: none;
+        }
+        .search-button {
+            padding: 12px 20px;
+            border: none;
+            background: linear-gradient(45deg, #ff5733, #ff914d);
+            color: white;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .card {
+            display: flex;
+            align-items: flex-start; /* Align items to the top */
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Align text to the left */
+            flex: 1; /* Allow it to grow */
+        }
+        
+        .details h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .details .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e91e63;
+            margin-bottom: 5px;
+        }
+        
+        .dish-description {
+            font-size: 14px;
+            color: #666;
+            text-align: justify; /* Keeps text structured */
+        }
+        
+
+        .container:hover > :not(:hover) {
+            opacity: 0.3;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+
+       /* Modal Styles */
+       .modal {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 40px;
+        border-radius: 15px;
+        width: 450px; /* Wider modal */
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        position: relative;
+        transform: translateY(-50px);
+        transition: transform 0.3s ease-out;
+    }
+
+    .modal-content h3 {
+        font-size: 2rem; /* Larger title */
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .modal-content .price {
+        font-size: 1.6rem;
+        color: #e91e63; /* Highlighted price */
+        margin: 10px 0;
+    }
+
+    .modal-content p {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .modal-content .bold {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .modal-content .add-to-cart {
+        padding: 14px 35px; /* Adjusted padding */
+        font-size: 1.2rem;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        background: linear-gradient(45deg, #ff6347, #ff5733); /* Gradient background */
+        color: white;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-content .add-to-cart:hover {
+        background: linear-gradient(45deg, #ff4500, #e91e63);
+        transform: translateY(-3px);
+    }
+
+    .modal.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .modal-content img:hover {
+        transform: scale(1.05);
+    }
+
+    .modal-content .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 30px;
+        color: #333;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .modal-content .close-btn:hover {
+        color: #e91e63;
+    }
+</style>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="/media/images/logo.jpg" alt="Logo" class="logo">
+        <div class="nav-links">
+            <a href="{% url 'homeconnect' %}">HomeConnect</a>
+            <a href="{% url 'receipes' %}">Kitchen</a>
+            <a href="{% url 'order' %}">Order</a>
+            <a href="{% url 'popular' %}">Popular</a>
+            <a href="{% url 'cart' %}">Cart</a>
+            <a href="{% url 'logout_page' %}">logout</a>
         </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1">Receipe Descripetion</label>
-          <textarea name="receipe_description" required class="form-control"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1">Receipe Image</label>
-            <input name="receipe_image" required type="file" class="form-control" >
-        </div>
-
-        <button type="submit" class="btn btn-primary">ADD Receipe</button>
-    </form>
-    <br>
-    <hr>
-    <div class="mt-5">
-      <div class="mx-auto col-6">
-        <form>
-          <div class = "mb-3">
-            <label for="searchemail" class="form-label">
-              Search Food </label><br>
-              <input name="search" type="text" class="mb-3 form-control">          </div>
-              <button type="submit" class ="btn btn-primary">Search</button>
-
+    </nav>
+    <div class="content">
+        <h2>Kitchen Recipes</h2>
+        <div class="search-bar">
+            <form method="GET">
+                <input name="search" type="text" class="search-input" placeholder="Enter dish name...">
+                <button type="submit" class="search-button">Search</button>
             </form>
-
-
-
-
-
-
-      </div>
+        </div>
+        <div class="container">
+            {% for recipe in recipes %}
+                <div class="card" onclick="openModal('{{ recipe.id }}', '{{ recipe.dish_name }}', '{{ recipe.dish_price }}', '{{ recipe.preparation_time }}', '{{ recipe.kitchen.kitchen_address }}', '/media/{{ recipe.dish_image }}')">
+                    <img src="/media/{{ recipe.dish_image }}" alt="{{ recipe.dish_name }}">
+                    <div class="details">
+                        <h3>{{ recipe.dish_name }}</h3>
+                        <div class="price">₹ {{ recipe.dish_price }}</div>
+                        <p class="dish-description">{{ recipe.dish_description|truncatewords:20 }}..readme.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>        
     
+        <!-- Modal -->
+        <div id="dishModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <img id="modalImage" src="" alt="Dish Image">
+                <h3 id="modalTitle"></h3>
+                <p class="price">₹ <span id="modalPrice"></span></p>
+                <p>Estimated Time: <span id="modalTime"></span></p>
+                <p class="bold"><span id="modalKitchen"></span></p>
+        
+                <form method="POST" action="{% url 'add_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="dishId" name="dish_id">
+                    <input type="number" name="quantity" value="1" min="1" style="margin-top: 10px; width: 50px;">
+                    <button type="submit" class="add-to-cart">Add to Cart</button>
+                </form>
+            </div>
+        </div>
     
+        <script>
+            function openModal(id, name, price, time, kitchen, image) {
+                document.getElementById("modalTitle").innerText = name;
+                document.getElementById("modalPrice").innerText = price;
+                document.getElementById("modalTime").innerText = time;
+                document.getElementById("modalKitchen").innerText = kitchen;
+                document.getElementById("modalImage").src = image;
+                document.getElementById("dishId").value = id;
+                document.getElementById("dishModal").style.display = "flex";
+                document.getElementById("dishModal").classList.add("show");
+            }
     
+            function closeModal() {
+                document.getElementById("dishModal").style.display = "none";
+                document.getElementById("dishModal").classList.remove("show");
+            }
+        </script>
     </div>
-
-
-
-    <br> <br>
-    
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">No. #</th>
-          <th scope="col">Receipe Name</th>
-          <th scope="col">Receipe Description</th>
-          <th scope="col">Receipe Image</th>
-          <th scope="col">Actions </th>
-        </tr>
-      </thead>
-      <tbody>
-        {%for receipe in receipe %}
-        <tr>
-          <th scope="row">{{forloop.counter}}</th>
-          <td>{{receipe.receipe_name}}</td>
-          <td>{{receipe.receipe_description}}</td>
-          <td><img src="/media/{{receipe.receipe_image}}" style = "height :100px"></td>
-          <td><a href="/delete-receipe/{{receipe.id}}/" class ="btn btn-danger m-2">DELETE</a>
-        <a href="/update-receipe/{{receipe.id}}/" class ="btn btn-success">Update</a></td>
-
-        </tr>
-      
-      </tbody>
-        {% endfor %} 
-    </table>
-
-
-
 </div>
-
-
-
-{% endblock %}
+        {% include 'footer.html' %}
+    </body>
+    </html>
